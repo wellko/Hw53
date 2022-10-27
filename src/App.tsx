@@ -5,15 +5,20 @@ import AddTaskForm from "./lib/AddTaskForm";
 
 
 function App() {
+
+	let id = 1;
+
 	const [task, setTask] = useState([
-		{text: 'Wake up', id: '0', done: ''},
-		{text: 'Go to the bathroom', id: '1', done: ''}
+		{text: 'Wake up', id: '0', done: 'flexBox'},
+		{text: 'Go to the bathroom', id: '1', done: 'flexBox'}
 	])
 
 	const AddTask = (event: React.ChangeEvent<HTMLFormElement>) => {
 		event.preventDefault();
+		id++
 		const newBlock = {...task[0]};
 		newBlock.text = event.target.input.value;
+		newBlock.id = id.toString();
 		const newBlockCopy = [...task];
 		newBlockCopy.push(newBlock);
 		setTask(newBlockCopy);
@@ -40,7 +45,7 @@ function App() {
 		<div>
 			{task.map((task, i) => (
 				<Task
-					done={checked[i] ? 'done' : ''}
+					done={checked[i] ? 'flexBox done' : 'flexBox'}
 					key={i}
 					text={task.text}
 					delete={() => deleteTask(i)}
