@@ -6,38 +6,48 @@ import AddTaskForm from "./lib/AddTaskForm";
 
 function App() {
 
-	let id = 1;
-
 	const [task, setTask] = useState([
-		{text: 'Wake up', id: '0', done: 'flexBox'},
-		{text: 'Go to the bathroom', id: '1', done: 'flexBox'}
+		{text: 'Wake up', id: '0', done: 'flexBox', checked: false},
+		{text: 'Go to the bathroom', id: '1', done: 'flexBox', checked: false}
 	])
 
 	const AddTask = (event: React.ChangeEvent<HTMLFormElement>) => {
 		event.preventDefault();
-		id++
-		const newBlock = {...task[0]};
+		let number = 0;
+		const newBlock = {...task[task.length - 1]};
 		newBlock.text = event.target.input.value;
-		newBlock.id = id.toString();
+		if (task.length > 0){
+			number = parseInt(newBlock.id);
+		}
+		newBlock.id = (number + 1).toString();
+		newBlock.checked = false;
 		const newBlockCopy = [...task];
 		newBlockCopy.push(newBlock);
 		setTask(newBlockCopy);
 		event.target.input.value = '';
-		setChecked(new Array(task.length + 1).fill(false))
 	}
 
-	const deleteTask = (index: number) => {
+	const deleteTask = (index:string) => {
 		const taskCopy = [...task];
-		taskCopy.splice(index, 1);
+		const rightTask = taskCopy.find(task => task.id === index)!
+		taskCopy.splice(taskCopy.indexOf(rightTask), 1);
 		setTask(taskCopy);
 	}
 
 
-	let [checked, setChecked] = useState(new Array(task.length).fill(false));
-
-	const changeCheckBox = (position: number) => {
-		const newCheck = checked.map((item, index) => (index === position)? !item : item)
-		setChecked(newCheck);
+	const changeCheckBox = (id: string) => {
+		const newCheck = task.map((item) => {
+			if (item.id === id){
+				return item.checked = !item.checked;
+			} return false
+		})
+		const rightTask = task.find(task => task.id === id)!
+		const rightTaskIndex = task.indexOf(rightTask);
+		const newChecked = {...task[rightTaskIndex]};
+		newChecked.checked = newCheck[rightTaskIndex];
+		const taskCopy = [...task];
+		taskCopy[rightTaskIndex] = newChecked;
+		setTask(taskCopy);
 	}
 
 
@@ -45,11 +55,11 @@ function App() {
 		<div>
 			{task.map((task, i) => (
 				<Task
-					done={checked[i] ? 'flexBox done' : 'flexBox'}
+					done={task.checked ? 'flexBox done' : 'flexBox'}
 					key={i}
 					text={task.text}
-					delete={() => deleteTask(i)}
-					change={() => changeCheckBox(i)}
+					delete={() => deleteTask(task.id)}
+					change={() => changeCheckBox(task.id)}
 				/>
 			))}
 		</div>

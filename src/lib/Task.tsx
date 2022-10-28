@@ -20,6 +20,7 @@ interface TaskProps extends React.PropsWithChildren {
 	text: string;
 	id?: string;
 	done: string;
+	checked?: boolean;
 	delete: React.MouseEventHandler;
 	change: React.ChangeEventHandler<HTMLInputElement>;
 }
